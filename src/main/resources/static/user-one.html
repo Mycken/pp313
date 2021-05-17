@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">-->
+<!--  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>-->
+
+    <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href= "https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
+  <title>Users</title>
+</head>
+
+<body>
+
+<nav class="navbar navbar-light bg-dark justify-content-between">
+  <a class="navbar-brand">
+    <span style="color: #e2d1d1; font-weight: bold" class="letter"  id="userauth" ></span>
+    <span style="color: #e2d1d1"   id="wr"></span>
+    <span style="color: #e2d1d1"   id="roles"></span>
+    <span style="color: #e2d1d1"   id="text"></span>
+  </a>
+  <form class="form-inline">
+    <a href="javascript: document.logoutForm.submit()" role="menuitem">
+      <span style="color: #e2d1d1"  >Logout</span></a>
+  </form>
+</nav>
+  <div class="row">
+    <div class="col-3">
+      <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill"
+               href="/users-list.html" role="tab" aria-controls="v-pills-admin" aria-selected="true">Admin</a>
+        <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="/users-one.html" role="tab"
+           aria-controls="v-pills-profile" aria-selected="false">User</a>
+      </div>
+    </div>
+  <div class="col-9">
+      <h1>User Information</h1>
+    <div>
+      <table
+              id="table"
+              data-toggle="table"
+              data-url="/user"> <!-- Выдает авторизованного пользователя-->
+        <thead>
+        <tr>
+          <th data-field="id" >ID</th>
+          <th data-field="username" >Login</th>
+          <th data-field="email" >Email</th>
+          <th data-field="firstName" >First Name</th>
+          <th data-field="lastName" >Last Name</th>
+          <th data-field="roles" data-formatter="rolesFormatter">Roles</th>
+        </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+</div>
+
+<form name="logoutForm" action="/login" method="post" hidden="true">
+  <input hidden type="submit" value="Sign Out"/>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src= "https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"
+        integrity="sha512-wV7Yj1alIZDqZFCUQJy85VN+qvEIly93fIQAN7iqDFCPEucLCeNFz4r35FCo9s6WrpdDQPi80xbljXB8Bjtvcg=="
+        crossorigin="anonymous"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!-- Formatters table-->
+<script>
+  function rolesFormatter(value){
+    var role ='';
+    switch (value.toString()){
+      case "ROLE_USER":
+        role = "USER";
+        break
+      case "ROLE_ADMIN":
+        role = "ADMIN";
+        break
+      case "ROLE_ADMIN,ROLE_USER":
+        role = "ADMIN,USER";
+        break
+    }
+    return role;
+  }
+  function editFormatter(value,row,index) {
+    return [
+      '<a  class="btn btn-info btn-sm" role="button" data-toggle="modal" href="#myUpdate" data-user-id=' + value + '>Edit</a>',
+    ];
+  }
+  function deleteFormatter(value) {
+    return [
+      '<a class="btn btn-danger btn-sm delBtn" href="#myDelete" data-toggle="modal" data-user-id=' + value + '>Delete</a>',
+    ];
+  }
+</script>
+<!--Определение авторизованного пользователя и занесение данных в шапку-->
+<script type="text/javascript">
+  var a = fetch("/user")
+          .then(promiseResult => {return promiseResult.text()})
+          .then(responseResult => {return JSON.parse(responseResult)})
+          .then(arr =>{
+            document.getElementById("userauth").innerHTML =arr["username"];
+            document.getElementById("wr").innerHTML ="with role:";
+            let r = (arr["roles"]==="ROLE_USER") ? 'USER': 'ADMIN';
+            document.getElementById("roles").innerHTML = r;
+          });
+
+</script>
+</body>
+</html>
