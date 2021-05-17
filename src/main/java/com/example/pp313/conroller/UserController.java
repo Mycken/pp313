@@ -33,8 +33,6 @@ public class UserController {
 
     public UserController() {}
 
-
-
     @RequestMapping(value = "login", method = RequestMethod.GET)
     public String loginPage() {
         return "login";
@@ -51,15 +49,6 @@ public class UserController {
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public UserDTO call (Authentication auth) {
         return userService.getUserByUserName(auth.getName());
-    }
-
-    @GetMapping("/api/users/{username}")
-    public @ResponseBody UserDTO viewUserProfile(@PathVariable String username, Authentication auth) {
-        Set<String> roles = AuthorityUtils.authorityListToSet(auth.getAuthorities());
-        if(roles.contains("ROLE_ADMIN") || auth.getName().equals(username)) {
-            return userService.getUserByUserName(username);
-        }
-        return null;
     }
 
     @RequestMapping(value = "/api/users/update", method=RequestMethod.POST)
