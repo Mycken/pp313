@@ -282,7 +282,7 @@
 
 <!--Определение авторизованного пользователя-->
 <script type="text/javascript">
-  var a = fetch("http://localhost:8080/")
+  var a = fetch("/user")
           .then(promiseResult => {return promiseResult.text()})
           .then(responseResult => {return JSON.parse(responseResult)})
           .then(arr =>{

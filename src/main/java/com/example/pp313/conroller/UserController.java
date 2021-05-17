@@ -48,10 +48,6 @@ public class UserController {
         return this.userService.getDTOById(id);
     }
 
-    @GetMapping(path ="", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @RequestMapping UserDTO getAuthUser (Authentication auth) {
-        return userService.getUserByUserName(auth.getName());
-    }
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public UserDTO call (Authentication auth) {
         return userService.getUserByUserName(auth.getName());
