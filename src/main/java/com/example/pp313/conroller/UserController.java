@@ -17,13 +17,6 @@ import java.util.*;
 
 @RestController
 public class UserController {
-//    private List <Map<String,String>> userv = new ArrayList<>(){{
-//        add(new HashMap<String,String>() {{ put("id", "1"); put("firstName", "pier"); }});
-//        add(new HashMap<String,String>() {{ put("id", "2"); put("firstName", "serg"); }});
-//        add(new HashMap<String,String>() {{ put("id", "3"); put("firstName", "vano"); }});
-//    }};
-//    @GetMapping("userv")
-//    public List<Map<String,String>> list(){return userv;}
 
     private UserService userService;
     @Autowired
